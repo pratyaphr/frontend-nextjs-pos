@@ -2,10 +2,10 @@
 import { useState } from "react";
 
 import { SearchContent, CartSidebar } from "@/components/Salepage";
-import ProductCard from "@/components/ProductCard";
-import { Product } from "@/types";
+import ProductCard from "@/components/Salepage/ProductCard";
+import { ProductType } from "@/types";
 
-interface CartItem extends Product {
+interface CartItem extends ProductType {
   qty: number;
 }
 
@@ -13,62 +13,68 @@ const SalePage = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const PRODUCTS: Product[] = [
+  const PRODUCTS: ProductType[] = [
     {
-      id: 1,
+      code: "1",
       name: "กาแฟอเมริกาโน่",
       price: 65,
       category: "เครื่องดื่ม",
+      StockQuantity: 5,
     },
     {
-      id: 2,
+      code: "2",
       name: "ชาเขียวมัทฉะ",
       price: 75,
+      StockQuantity: 5,
       category: "เครื่องดื่ม",
     },
     {
-      id: 3,
+      code: "3",
       name: "ครัวซองต์เนยสด",
       price: 85,
+      StockQuantity: 5,
       category: "เบเกอรี่",
     },
     {
-      id: 4,
+      code: "4",
       name: "เค้กช็อกโกแลต",
       price: 120,
+      StockQuantity: 5,
       category: "เบเกอรี่",
     },
     {
-      id: 5,
+      code: "5",
       name: "น้ำเปล่า",
       price: 15,
+      StockQuantity: 5,
       category: "เครื่องดื่ม",
     },
     {
-      id: 6,
+      code: "6",
       name: "คุ้กกี้โอ๊ตมีล",
       price: 45,
+      StockQuantity: 5,
       category: "ขนมขบเคี้ยว",
     },
   ];
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: ProductType) => {
     setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+      const existing = prev.find((item) => item.code === product.code);
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, qty: item.qty + 1 } : item,
+          item.code === product.code ? { ...item, qty: item.qty + 1 } : item,
         );
       }
       return [...prev, { ...product, qty: 1 }];
     });
   };
 
-  const updateQty = (id: number, amount: number) => {
+  const updateQty = (code: string, qty: number) => {
     setCart((prev) =>
       prev.map((item) => {
-        if (item.id === id) {
-          const newQty = Math.max(1, item.qty + amount);
+        if (item.code === code) {
+          const newQty = Math.max(1, item.qty + qty);
           return { ...item, qty: newQty };
         }
         return item;
@@ -76,8 +82,8 @@ const SalePage = () => {
     );
   };
 
-  const DeleteItemCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  const DeleteItemCart = (code: string) => {
+    setCart((prev) => prev.filter((item) => item.code !== code));
   };
 
   const clearCart = () => setCart([]);
@@ -95,7 +101,7 @@ const SalePage = () => {
 
           <div className="flex-1 p-6 overflow-y-auto grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-4 content-start">
             {PRODUCTS.map((p) => (
-              <ProductCard key={p.id} product={p} onAdd={addToCart} />
+              <ProductCard key={p.code} product={p} onAdd={addToCart} />
             ))}
           </div>
         </div>
@@ -105,6 +111,7 @@ const SalePage = () => {
           updateQty={updateQty}
           DeleteItemCart={DeleteItemCart}
           clearCart={clearCart}
+          addToCart={addToCart}
         />
       </div>
     </>

@@ -27,7 +27,7 @@ const SideBar = () => {
           <div className="space-y-1">
             <SidebarItem
               icon={BarChart3}
-              label="รายงาน"
+              label="แดชบอร์ด"
               id="/"
               active={Pathname === "/"}
             />
