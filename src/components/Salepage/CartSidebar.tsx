@@ -11,10 +11,11 @@ interface Cart extends ProductType {
 
 interface CartSidebarPtops {
   cart: Cart[];
-  updateQty: (id: string, amount: number) => void;
+  updateQty: (id: string, qty: number) => void;
   clearCart: () => void;
   DeleteItemCart: (id: string) => void;
   addToCart: (item: ProductType) => void;
+  changeQty: (id: string, qty: number) => void;
 }
 
 export const CartSidebar = ({
@@ -23,15 +24,15 @@ export const CartSidebar = ({
   clearCart,
   DeleteItemCart,
   addToCart,
+  changeQty,
 }: CartSidebarPtops) => {
   const [showAddPrice, setShowAddPrice] = useState<boolean>(false);
   const [item, setItem] = useState({
-    code: "6",
+    code: "Unknown",
     name: "Unknown",
     price: 1,
     StockQuantity: 0,
     category: "unknown",
-    qty: 1,
   });
   const [total, setTotal] = useState<number>(0);
 
@@ -43,6 +44,27 @@ export const CartSidebar = ({
     setTotal(totalPrice);
   }, [cart]);
 
+  function generateEAN13() {
+    const countryCode = "885";
+
+    const randomDigits = Math.floor(
+      100000000 + Math.random() * 900000000,
+    ).toString();
+
+    const base = countryCode + randomDigits.slice(0, 9);
+
+    const digits = base.split("").map(Number);
+
+    const sum = digits.reduce((acc, num, index) => {
+      return acc + num * (index % 2 === 0 ? 1 : 3);
+    }, 0);
+
+    const checkDigit = (10 - (sum % 10)) % 10;
+
+    const code = base + checkDigit;
+
+    return code;
+  }
   console.log("item", item);
 
   return (
@@ -92,7 +114,13 @@ export const CartSidebar = ({
                   >
                     <Minus size={18} />
                   </button>
-                  <span className="font-bold w-6 text-center">{item.qty}</span>
+                  <input
+                    value={item.qty}
+                    onChange={(e) =>
+                      changeQty(item.code, Number(e.target.value))
+                    }
+                    className="font-bold w-8 text-center"
+                  ></input>
                   <button
                     onClick={() => updateQty(item.code, 1)}
                     className="p-1 rounded-lg bg-gray-100 active:bg-gray-200 cursor-pointer"
@@ -134,9 +162,7 @@ export const CartSidebar = ({
                 <input
                   type="text"
                   value={item?.name ?? ""}
-                  // placeholder="ชื่อสินค้า"
                   className="w-full pl-3 pr-4 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  // value={searchTerm}
                   onChange={(e) =>
                     setItem({
                       ...item,
@@ -159,7 +185,6 @@ export const CartSidebar = ({
                     value={item?.price ?? 1}
                     placeholder="เพิ่มราคา"
                     className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    // value={searchTerm}
                     onChange={(e) =>
                       setItem({
                         ...item,
@@ -172,7 +197,7 @@ export const CartSidebar = ({
             </div>
             <button
               className="w-84 bg-blue-500 text-white mt-2 pl-5 pr-5 py-2.5  border border-slate-100 rounded-xl focus:outline-none appearance-none font-bold text-slate-600 cursor-pointer hover:bg-blue-600 hover:text-white active:scale-95 transition-all "
-              onClick={() => addToCart(item)}
+              onClick={() => addToCart({ ...item, code: generateEAN13() })}
             >
               ตกลง
             </button>

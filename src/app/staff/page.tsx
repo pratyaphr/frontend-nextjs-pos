@@ -10,6 +10,16 @@ import { Column, SatffType } from "@/types";
 const Staff = () => {
   const [open, setopen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const categories = [
+    {
+      title: "ผู้จัดการร้าน",
+      value: "manager",
+    },
+    {
+      title: "พนักงาน",
+      value: "cashier",
+    },
+  ];
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,7 +27,6 @@ const Staff = () => {
     const formData = new FormData(e.currentTarget);
 
     const data = {
-      id: formData.get("id"),
       name: formData.get("name"),
       role: formData.get("role"),
     };
@@ -144,13 +153,13 @@ const Staff = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-1">
                 <label className="text-[10px] font-black text-slate-400 uppercase mb-1 block tracking-widest">
-                  รหัสพนักงาน
+                  ชื่อ
                 </label>
                 <input
-                  name="id"
                   type="text"
+                  name="name"
                   required
-                  // readOnly={!!editingProduct}
+                  placeholder=""
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
                 />
               </div>
@@ -162,27 +171,13 @@ const Staff = () => {
                   name="role"
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 appearance-none cursor-pointer"
                 >
-                  {/* {categories
-                  .filter((c) => c !== "ทั้งหมด")
-                  .map((c) => (
-                    <option key={c} value={c}>
-                      {c}
+                  {categories.map((v, index) => (
+                    <option key={index} value={v.value}>
+                      {v?.title ?? "-"}
                     </option>
-                  ))} */}
+                  ))}
                 </select>
               </div>
-            </div>
-            <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase mb-1 block tracking-widest">
-                ชื่อ
-              </label>
-              <input
-                type="text"
-                name="name"
-                required
-                placeholder=""
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
-              />
             </div>
           </form>
         </Modal>

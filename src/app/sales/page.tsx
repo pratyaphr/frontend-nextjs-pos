@@ -66,7 +66,19 @@ const SalePage = () => {
           item.code === product.code ? { ...item, qty: item.qty + 1 } : item,
         );
       }
-      return [...prev, { ...product, qty: 1 }];
+
+      let newProduct = { ...product, qty: 1 };
+
+      if (product.name === "Unknown") {
+        const unknownCount = prev.filter((item) =>
+          item.name.startsWith("Unknown"),
+        ).length;
+
+        if (unknownCount > 0) {
+          newProduct.name = `Unknown(${unknownCount + 1})`;
+        }
+      }
+      return [...prev, newProduct];
     });
   };
 
@@ -76,6 +88,17 @@ const SalePage = () => {
         if (item.code === code) {
           const newQty = Math.max(1, item.qty + qty);
           return { ...item, qty: newQty };
+        }
+        return item;
+      }),
+    );
+  };
+
+  const changeQty = (code: string, qty: number) => {
+    setCart((prev) =>
+      prev.map((item) => {
+        if (item.code === code) {
+          return { ...item, qty: qty };
         }
         return item;
       }),
@@ -112,6 +135,7 @@ const SalePage = () => {
           DeleteItemCart={DeleteItemCart}
           clearCart={clearCart}
           addToCart={addToCart}
+          changeQty={changeQty}
         />
       </div>
     </>

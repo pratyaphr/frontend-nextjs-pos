@@ -10,23 +10,54 @@ import { Column, ProductType } from "@/types";
 const Inventory = () => {
   const [open, setopen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [formData, setFormData] = useState({
+    code: "",
+    name: "",
+    category: "เครื่องดื่ม",
+    price: "",
+    StockQuantity: "",
+  });
+  const categories = [
+    { title: "ของใช้ในบ้าน", value: "household" },
+    { title: "เครื่องดื่ม", value: "beverage" },
+    { title: "อื่นๆ", value: "other" },
+  ];
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-
-    const data = {
-      code: formData.get("code"),
-      name: formData.get("name"),
-      category: formData.get("category"),
-      price: formData.get("price"),
-      StockQuantity: formData.get("StockQuantity"),
+    const newProduct: ProductType = {
+      code: formData.code,
+      name: formData.name,
+      category: formData.category,
+      price: Number(formData.price),
+      StockQuantity: Number(formData.StockQuantity),
     };
 
-    console.log(data);
+    console.log(newProduct);
   };
 
+  function generateEAN13() {
+    const countryCode = "885";
+
+    const randomDigits = Math.floor(
+      100000000 + Math.random() * 900000000,
+    ).toString();
+
+    const base = countryCode + randomDigits.slice(0, 9);
+
+    const digits = base.split("").map(Number);
+
+    const sum = digits.reduce((acc, num, index) => {
+      return acc + num * (index % 2 === 0 ? 1 : 3);
+    }, 0);
+
+    const checkDigit = (10 - (sum % 10)) % 10;
+
+    const code = base + checkDigit;
+
+    setFormData((prev) => ({ ...prev, code: code }));
+  }
   const columns: Column<ProductType>[] = [
     {
       title: "รหัสสินค้า",
@@ -133,11 +164,11 @@ const Inventory = () => {
                   // value={categoryFilter}
                   // onChange={(e) => setCategoryFilter(e.target.value)}
                 >
-                  {/* {categories.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
+                  {categories.map((v, index) => (
+                    <option key={index} value={v.value}>
+                      {v.title ?? "-"}
                     </option>
-                  ))} */}
+                  ))}
                 </select>
               </div>
             </div>
@@ -157,37 +188,43 @@ const Inventory = () => {
             onSubmit={handleSubmit}
             className="p-6 space-y-4"
           >
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-1">
-                <label className="text-[10px] font-black text-slate-400 uppercase mb-1 block tracking-widest">
-                  รหัสสินค้า
-                </label>
-                <input
-                  name="code"
-                  type="text"
-                  required
-                  // readOnly={!!editingProduct}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
-                />
-              </div>
-              <div className="col-span-1">
-                <label className="text-[10px] font-black text-slate-400 uppercase mb-1 block tracking-widest">
-                  หมวดหมู่
-                </label>
-                <select
-                  name="category"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 appearance-none cursor-pointer"
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase mb-1 block tracking-widest">
+                รหัสสินค้า (รหัส Barcode)
+              </label>
+              <div className="flex gap-3">
+                <div className="relative flex-1">
+                  <input
+                    name="code"
+                    type="text"
+                    placeholder="เช่น 8850123456789"
+                    required
+                    // readOnly={!!editingProduct}
+                    value={formData.code}
+                    onChange={(e) =>
+                      setFormData({ ...formData, code: e.target.value })
+                    }
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={generateEAN13}
+                  // disabled={isGenerating}
+                  className="cursor-pointer group relative flex items-center gap-2 px-5 py-3 bg-white border-2 border-blue-600 text-blue-600 rounded-2xl font-black hover:bg-blue-600 hover:text-white transition-all active:scale-95 disabled:opacity-50"
                 >
-                  {/* {categories
-                  .filter((c) => c !== "ทั้งหมด")
-                  .map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))} */}
-                </select>
+                  {/* <Wand2
+                          size={20}
+                          className="group-hover:animate-bounce"
+                        /> */}
+                  <span className="hidden sm:inline">สุ่มรหัส</span>
+                </button>
               </div>
+              <p className="text-[10px] text-blue-500 font-bold ml-1">
+                แนะนำ: หากไม่มีรหัสสินค้าคลิกปุ่มสุ่มรหัสเพื่อประหยัดเวลา
+              </p>
             </div>
+
             <div>
               <label className="text-[10px] font-black text-slate-400 uppercase mb-1 block tracking-widest">
                 ชื่อสินค้า
@@ -196,6 +233,10 @@ const Inventory = () => {
                 type="text"
                 name="name"
                 required
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="เช่น อเมริกาโน่ร้อน..."
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
               />
@@ -209,6 +250,10 @@ const Inventory = () => {
                   type="number"
                   name="price"
                   required
+                  value={formData.price}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: e.target.value })
+                  }
                   placeholder="0.00"
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
                 />
@@ -221,9 +266,34 @@ const Inventory = () => {
                   type="number"
                   name="StockQuantity"
                   required
-                  placeholder="0"
+                  min={1}
+                  value={formData.StockQuantity}
+                  onChange={(e) =>
+                    setFormData({ ...formData, StockQuantity: e.target.value })
+                  }
                   className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"
                 />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase mb-1 block tracking-widest">
+                  หมวดหมู่
+                </label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 appearance-none cursor-pointer"
+                >
+                  {categories.map((v, index) => (
+                    <option key={index} value={v.value}>
+                      {v.title ?? "-"}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </form>
