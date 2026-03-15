@@ -8,13 +8,16 @@ export type User = {
 };
 
 type AuthState = {
-  user: User | null;
-  setUser: (user: User) => void;
+  auth: any | null;
+  setAuth: (auth: any) => void;
   logout: () => void;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-  logout: () => set({ user: null }),
+  auth: null,
+  setAuth: (value) => {
+    console.log("setAuth", value);
+    set({ auth: value });
+  },
+  logout: () => set({ auth: null }),
 }));

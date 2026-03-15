@@ -5,7 +5,7 @@ import { Users } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 const Header = () => {
-  const { user } = useAuthStore();
+  const { auth } = useAuthStore();
 
   return (
     <>
@@ -17,10 +17,10 @@ const Header = () => {
         <div className="flex items-center gap-4">
           <div className="text-right hidden sm:block">
             <p className="text-sm font-bold leading-none text-slate-800">
-              {user?.name}
+              {auth?.user?.name}
             </p>
             <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider font-semibold">
-              {user?.role}
+              {auth?.user?.role}
             </p>
           </div>
           <div className="w-10 h-10 bg-slate-100 rounded-xl border-2 border-white shadow-sm flex items-center justify-center text-slate-500 ">

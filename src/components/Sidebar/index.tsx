@@ -1,19 +1,27 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutGrid,
   Package,
   Users,
   BarChart3,
-  Settings,
+  ReceiptText,
   LogOut,
+  LogIn,
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const SideBar = () => {
   const Pathname = usePathname() === "/" ? "/" : usePathname().split("/")[1];
+  const { auth, logout } = useAuthStore();
+  const router = useRouter();
 
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
   return (
     <>
       <nav className="w-24 bg-white border-r border-gray-300/40 flex flex-col justify-between z-20">
@@ -51,15 +59,30 @@ const SideBar = () => {
             />
 
             <SidebarItem
-              icon={Settings}
-              label="ตั้งค่า"
-              id="settings"
-              active={Pathname === "settings"}
+              icon={ReceiptText}
+              label="ใบเสร็จ"
+              id="receipt"
+              active={Pathname === "receipt"}
             />
           </div>
         </div>
         <div className="mb-4  pt-4">
-          <SidebarItem icon={LogOut} label="ออก" id="logout" active={false} />
+          {auth ? (
+            <SidebarItem
+              icon={LogOut}
+              label="ออกจากระบบ"
+              id="logout"
+              active={false}
+              onClick={() => handleLogout()}
+            />
+          ) : (
+            <SidebarItem
+              icon={LogIn}
+              label="เข้าสู่ระบบ"
+              id="login"
+              active={false}
+            />
+          )}
         </div>
       </nav>
     </>

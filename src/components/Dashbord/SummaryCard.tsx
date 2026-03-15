@@ -1,14 +1,6 @@
 "use client";
 
 import React from "react";
-import {
-  TrendingUp,
-  ArrowUpRight,
-  ReceiptText,
-  Boxes,
-  AlertCircle,
-  Trophy,
-} from "lucide-react";
 
 type Type = "sale" | "bill" | "inStock" | "outOfStock";
 

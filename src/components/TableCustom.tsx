@@ -1,7 +1,5 @@
 "use client";
 
-import { Trash2, Edit3 } from "lucide-react";
-
 import { Column } from "@/types";
 
 interface TableCustomProps<T> {

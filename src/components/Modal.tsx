@@ -1,36 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  LayoutGrid,
-  ShoppingCart,
-  Package,
-  Users,
-  BarChart3,
-  Settings,
-  Search,
-  Plus,
-  Minus,
-  Trash2,
-  CreditCard,
-  Banknote,
-  QrCode,
-  LogOut,
-  ChevronRight,
-  TrendingUp,
-  ArrowUpRight,
-  ReceiptText,
-  Boxes,
-  AlertCircle,
-  CalendarDays,
-  Trophy,
-  Edit3,
-  Filter,
-  MoreVertical,
-  CheckCircle2,
-  XCircle,
-  PackagePlus,
-} from "lucide-react";
+import { XCircle } from "lucide-react";
 
 interface ModalProps {
   open: boolean;

@@ -159,11 +159,7 @@ const Inventory = () => {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
                   size={18}
                 />
-                <select
-                  className="pl-10 pr-8 py-2.5 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none appearance-none font-bold text-slate-600 cursor-pointer"
-                  // value={categoryFilter}
-                  // onChange={(e) => setCategoryFilter(e.target.value)}
-                >
+                <select className="pl-10 pr-8 py-2.5 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none appearance-none font-bold text-slate-600 cursor-pointer">
                   {categories.map((v, index) => (
                     <option key={index} value={v.value}>
                       {v.title ?? "-"}
@@ -199,7 +195,6 @@ const Inventory = () => {
                     type="text"
                     placeholder="เช่น 8850123456789"
                     required
-                    // readOnly={!!editingProduct}
                     value={formData.code}
                     onChange={(e) =>
                       setFormData({ ...formData, code: e.target.value })
@@ -210,13 +205,8 @@ const Inventory = () => {
                 <button
                   type="button"
                   onClick={generateEAN13}
-                  // disabled={isGenerating}
                   className="cursor-pointer group relative flex items-center gap-2 px-5 py-3 bg-white border-2 border-blue-600 text-blue-600 rounded-2xl font-black hover:bg-blue-600 hover:text-white transition-all active:scale-95 disabled:opacity-50"
                 >
-                  {/* <Wand2
-                          size={20}
-                          className="group-hover:animate-bounce"
-                        /> */}
                   <span className="hidden sm:inline">สุ่มรหัส</span>
                 </button>
               </div>

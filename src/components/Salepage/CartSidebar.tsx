@@ -65,7 +65,6 @@ export const CartSidebar = ({
 
     return code;
   }
-  console.log("item", item);
 
   return (
     <>

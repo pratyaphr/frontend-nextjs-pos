@@ -125,11 +125,7 @@ const Staff = () => {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 "
                   size={18}
                 />
-                <button
-                  className="pl-10 pr-8 py-2.5 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none appearance-none font-bold text-slate-600 cursor-pointer hover:bg-blue-600 hover:text-white active:scale-95 transition-all "
-                  // value={categoryFilter}
-                  // onChange={(e) => setCategoryFilter(e.target.value)}
-                >
+                <button className="pl-10 pr-8 py-2.5 bg-slate-50 border border-slate-100 rounded-xl focus:outline-none appearance-none font-bold text-slate-600 cursor-pointer hover:bg-blue-600 hover:text-white active:scale-95 transition-all ">
                   ค้นหา
                 </button>
               </div>
